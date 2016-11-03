@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 /**
  * 有{@link com.yjxbi.commons.annotation.DataSourceChange}注解的方法，调用时会切换到指定的数据源
  *
- * @author tanghd
+ * @author tukai
  */
 @Aspect
 @Component
@@ -28,6 +28,7 @@ public class DataSourceAspect {
                 selectedDataSource = true;
                 if (dataSourceChange.slave()) {
                     DynamicDataSource.useSlave();
+                    DbContextHolder.setDbType("1");
                 } else {
                     DynamicDataSource.useMaster();
                 }

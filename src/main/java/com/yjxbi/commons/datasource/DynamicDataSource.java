@@ -13,9 +13,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 继承{@link org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource}
- * 配置主从数据源后，根据选择，返回对应的数据源。多个从库的情况下，会平均的分配从库，用于负载均衡。
+ * 配置主从数据源后，根据选择，返回对应的数据源。多个从库的情况下通过DbContextHolder的选择来返回执行那个从库。
  *
- * @author tanghd
+ * @author tukai
  */
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
@@ -96,7 +96,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     }
 
     /**
-     * 如果是选择使用从库，且从库的数量大于1，则通过取模来控制从库的负载,
+     * 如果是选择使用从库，通过DbContextHolder的选择来返回执行那个从库
      * 计算结果返回AbstractRoutingDataSource
      */
     @Override
@@ -111,9 +111,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
                 return key;
             } else if (SLAVE.equals(key)) {
                 if (slaveSize > 1) {// Slave loadBalance
-                    long c = slaveCount.incrementAndGet();
-                    c = c % slaveSize;
-                    return SLAVE + (c + 1);
+                    /*long c = slaveCount.incrementAndGet();
+                    c = c % slaveSize;*/
+                    return DbContextHolder.getDbType();
                 } else {
                     return SLAVE + "1";
                 }

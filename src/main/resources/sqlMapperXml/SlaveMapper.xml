@@ -3,8 +3,6 @@
 <mapper namespace="com.yjxbi.mapper.SlaveMapper">
 
     <select id="count" resultType="java.lang.Integer">
-        select
-        count(*) count
-        from wx_account
+        select count(1) from tktemp2
     </select>
 </mapper>

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Description：DataSourceRoutingAspectTest
- * @author：Wangzhixuan 
+ * @author：tukai
  * @date：2015年8月19日 下午5:23:24
  */
 public class DataSourceRoutingAspectTest extends BaseTest {
