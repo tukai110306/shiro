@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjxbi.mapper.ErpSlaveMapper">
+	<resultMap id="ShowMap" type="com.yjxbi.commons.result.PubConstants">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="SumMap" type="com.yjxbi.model.SingleTotal">
+        <result column="ftccurrency" property="ftccurrency" jdbcType="VARCHAR"/>
+        <result column="totaloperationamountall" property="totaloperationamountall" jdbcType="VARCHAR"/>
+        <result column="totalbusiamountall" property="totalbusiamountall" jdbcType="VARCHAR"/>
+        <result column="totalforeignall" property="totalforeignall" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="SumTotalMap" type="com.yjxbi.model.SingleTotalSum">
+        <result column="totalrmbftcamountsum" property="totalrmbftcamountsum" jdbcType="VARCHAR"/>
+        <result column="totalrmbbusiamountsum" property="totalrmbbusiamountsum" jdbcType="VARCHAR"/>
+        <result column="paymentofagentsum" property="paymentofagentsum" jdbcType="VARCHAR"/>
+        <result column="paymentofgetsum" property="paymentofgetsum" jdbcType="VARCHAR"/>
+        <result column="totalusdftcamountsum" property="totalusdftcamountsum" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="SingleCustomerCostMap" type="com.yjxbi.model.SingleSource">
+        <result column="CUSTOMERNO" property="customerno" jdbcType="VARCHAR"/>
+        <result column="PAYMENTOFAGENT" property="paymentofagent" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="SingleSourceMap" type="com.yjxbi.model.SingleSource">
+        <result column="CUSTOMERNO" property="customerno" jdbcType="VARCHAR"/>
+        <result column="FTCONTRACTCODE" property="ftcontractcode" jdbcType="VARCHAR"/>
+        <result column="FTCONTRACTCODE2" property="ftcontractcode2" jdbcType="VARCHAR"/>
+        <result column="PRINCIPAL1" property="principal1" jdbcType="VARCHAR"/>
+        <result column="AGENTORSELF" property="agentorself" jdbcType="VARCHAR"/>
+        <result column="CONTRACTYPE2" property="contractype2" jdbcType="VARCHAR"/>
+        <result column="FTCCURRENCY" property="ftccurrency" jdbcType="VARCHAR"/>
+        <result column="CUSTOMDATE" property="customdate" jdbcType="VARCHAR"/>
+        <result column="MAINREGION" property="mainregion" jdbcType="VARCHAR"/>
+        <result column="OPERATIONDEPT" property="operationdept" jdbcType="VARCHAR"/>
+        <result column="PAYMENTOFAGENT" property="paymentofagent" jdbcType="VARCHAR"/>
+        <result column="PAYMENTOFGET" property="paymentofget" jdbcType="VARCHAR"/>
+        <result column="TOTALFOREIGN" property="totalforeign" jdbcType="VARCHAR"/>
+        <result column="DEVELOPEDEPT" property="developedept" jdbcType="VARCHAR"/>
+        <result column="TOTALFTCAMOUNT" property="totalftcamount" jdbcType="VARCHAR"/>
+        <result column="PRINCIPAL2NO" property="principal2no" jdbcType="VARCHAR"/>
+        <result column="customertype" property="buyCustomerType" jdbcType="VARCHAR"/>
+        <result column="CUSTOMERCODE" property="customercode" jdbcType="VARCHAR"/>
+        <result column="CUSTOMERNAME" property="customername" jdbcType="VARCHAR"/>
+        <result column="ISZZKF" property="iszzkf" jdbcType="VARCHAR"/>
+        <result column="OPERATIONNAME" property="operationname" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <select id="queryOperationList" resultMap="ShowMap">
+       SELECT eapt_customer.customerno id,eapt_customer.customercode||'-'||eapt_customer.customernamecn name
+       FROM eapt_customer WHERE BITAND (customertype, 16) = 16 AND islock = 'N' ORDER BY customercode
+   	</select>
+   	
+   	<select id="queryJsCustomerList" resultMap="ShowMap" parameterType="java.lang.String">
+       SELECT a.customercode id,a.customercode||'-'||a.customernamecnshort name FROM eapt_customer a 
+       WHERE BITAND (customertype, 1) = 1 AND islock = 'N'  ORDER BY orderindex,customercode
+   	</select>
+   	
+   	<select id="queryStateListByName" resultMap="ShowMap" parameterType="java.lang.String">
+       select a.CONSTANTVALUE id,a.constantname name from pub_constants a where a.constanttype = #{stateName}
+   	</select>
+   	
+   	<select id="querySingleList" resultMap="SingleSourceMap" parameterType="PageInfo">
+       <![CDATA[select temp.* from(select * from (select          eaptcustom2_.CUSTOMERNO,
+                        eaptcustom2_.customercode||'-'||eaptcustom2_.customernamecn as CUSTOMERNAME,
+                        eaptftcont0_.FTCONTRACTCODE,
+                        eaptftcont0_.FTCONTRACTCODE2,
+                        eaptftcont0_.PRINCIPAL1,
+                        eaptftcont0_.AGENTORSELF,
+                        eaptftcont0_.CONTRACTYPE2,
+                        eaptftcont0_.FTCCURRENCY,
+                        eaptftcont0_.CUSTOMDATE,
+                        eaptftcont0_.MAINREGION,
+                        eaptftcont0_.OPERATIONDEPT,
+                        eaptftcont0_.PAYMENTCUSTOMER,
+                        eaptftcont0_.BUYER,
+                        eaptftcont1_.PAYMENTOFAGENT,
+                        eaptftcont1_.PAYMENTOFGET,
+                        eaptftcont1_.TOTALOPERATIONAMOUNT,
+                        eaptftcont1_.TOTALFOREIGN,
+                        eaptcustom2_.DEVELOPEDEPT,
+                        eaptftcont0_.TOTALFTCAMOUNT,
+                        emp.name as PRINCIPAL2NO,
+                        eaptcustom2_.ISZZKF,
+                        buycus.customertype,
+                        eaptcustom2_.CUSTOMERCODE,
+                        cus.customercode||'-'||cus.customernamecn as OPERATIONNAME
+          from EAPT_FTCONTRACTHEADER eaptftcont0_
+         inner join EAPT_FTCONTRACTHEADER5 eaptftcont1_ on eaptftcont0_.FTCONTRACTNO =
+                                                           eaptftcont1_.FTCONTRACTNO
+          left join EAPT_CUSTOMER eaptcustom2_ on eaptftcont0_.PAYMENTCUSTOMER =
+                                                        eaptcustom2_.CUSTOMERNO
+          left join EAPT_CUSTOMER buycus on buycus.CUSTOMERNO=eaptftcont0_.buyer
+          left join employee emp on emp.employeeno = eaptcustom2_.PRINCIPAL2NO
+          left join EAPT_CUSTOMER cus on cus.CUSTOMERNO = eaptftcont0_.OPERATIONDEPT
+		 where 1=1]]>
+            <if test=" condition.createdateStart != null ">
+                and eaptftcont0_.CUSTOMDATE >= to_date(#{condition.createdateStart},'yyyy-mm-dd')
+            </if>
+            <if test=" condition.createdateEnd != null ">
+                <![CDATA[and eaptftcont0_.CUSTOMDATE <= to_date(#{condition.createdateEnd},'yyyy-mm-dd')]]>
+            </if>
+            <if test=" condition.operationId != null and condition.operationId != '' ">
+                and eaptftcont0_.OPERATIONDEPT = #{condition.operationId}
+            </if>
+            <if test=" condition.tgId != null and condition.tgId != '' ">
+                and eaptftcont0_.CUSTOMSTATUS = #{condition.tgId}
+            </if>
+            <if test=" condition.ftcontractcode != null and condition.ftcontractcode != '' ">
+                and lower(eaptftcont0_.FTCONTRACTCODE) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode}')),'%')
+            </if>
+            <if test=" condition.ftcontractcode2 != null and condition.ftcontractcode2 != '' ">
+                and lower(eaptftcont0_.FTCONTRACTCODE2) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode2}')),'%')
+            </if>
+            <if test=" condition.developer != null and condition.developer != '' ">
+                and exists(select 1 from EMPLOYEE epl where epl.NAME = #{condition.developer} and eaptftcont0_.PRINCIPAL1 = epl.USERNAME)
+            </if>
+            <if test=" condition.principal2 != null and condition.principal2 != '' ">
+                and lower(eaptcustom2_.PRINCIPAL2) LIKE concat(CONCAT('%',lower('${condition.principal2}')),'%')
+            </if>
+            <if test=" condition.kfpartId != null and condition.kfpartId != '' ">
+                and exists(select 1 from EMPLOYEE epl2 where epl2.CATEGORY5 = #{condition.kfpartId} and eaptcustom2_.PRINCIPAL1NO = epl2.EMPLOYEENO)
+            </if>
+            <if test=" condition.mainregionId != null and condition.mainregionId != '' ">
+                and eaptftcont0_.MAINREGION = #{condition.mainregionId}
+            </if>
+            <if test=" condition.contractypeId == null or condition.contractypeId == '' ">
+                and eaptftcont0_.CONTRACTYPE2 IN ('EXP', 'IMP', 'SAL', 'TRS')
+            </if>
+            <if test=" condition.contractypeId != null and condition.contractypeId != '' ">
+                and eaptftcont0_.CONTRACTYPE2 = #{condition.contractypeId}
+            </if>
+            <if test=" condition.selfagentId != null and condition.selfagentId != '' ">
+                and eaptftcont0_.AGENTORSELF = #{condition.selfagentId}
+            </if>
+            <if test=" condition.iszzkf != null and condition.iszzkf != '' ">
+                and eaptcustom2_.ISZZKF = #{condition.iszzkf}
+            </if>
+            <if test=" condition.jscustomer != null and condition.jscustomer != '' ">
+                and eaptcustom2_.CUSTOMERCODE = #{condition.jscustomer}
+            </if>
+            <if test=" condition.totalforeign != null and condition.totalforeign != '' ">
+                <if test="condition.totalforeign=='G'.toString()">
+                and eaptftcont1_.TOTALFOREIGN > 0
+                </if>
+                <if test="condition.totalforeign=='E'.toString()">
+                and eaptftcont1_.TOTALFOREIGN = 0
+                </if>
+                <if test="condition.totalforeign=='L'.toString()">
+                <![CDATA[and eaptftcont1_.TOTALFOREIGN < 0]]>
+                </if>
+            </if>
+		   and eaptftcont0_.FTCSTATUS IN ('RUN', 'CLO') 
+		 <![CDATA[order by eaptftcont0_.FTCONTRACTNO DESC)) temp where rownum > #{from} and rownum <= #{last}  ]]>
+    </select>
+    
+    <select id="querySingleCount" resultType="java.lang.Integer" parameterType="PageInfo">
+    	<![CDATA[select count(1) count  from EAPT_FTCONTRACTHEADER eaptftcont0_
+         inner join EAPT_FTCONTRACTHEADER5 eaptftcont1_ on eaptftcont0_.FTCONTRACTNO =
+                                                           eaptftcont1_.FTCONTRACTNO
+          left join EAPT_CUSTOMER eaptcustom2_ on eaptftcont0_.PAYMENTCUSTOMER =
+                                                        eaptcustom2_.CUSTOMERNO
+          left join EAPT_CUSTOMER buycus on buycus.CUSTOMERNO=eaptftcont0_.buyer
+		 where 1=1]]>
+            <if test=" condition.createdateStart != null ">
+                and eaptftcont0_.CUSTOMDATE >= to_date(#{condition.createdateStart},'yyyy-mm-dd')
+            </if>
+            <if test=" condition.createdateEnd != null ">
+                <![CDATA[and eaptftcont0_.CUSTOMDATE <= to_date(#{condition.createdateEnd},'yyyy-mm-dd')]]>
+            </if>
+            <if test=" condition.operationId != null and condition.operationId != '' ">
+                and eaptftcont0_.OPERATIONDEPT = #{condition.operationId}
+            </if>
+            <if test=" condition.tgId != null and condition.tgId != '' ">
+                and eaptftcont0_.CUSTOMSTATUS = #{condition.tgId}
+            </if>
+            <if test=" condition.ftcontractcode != null and condition.ftcontractcode != '' ">
+                and lower(eaptftcont0_.FTCONTRACTCODE) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode}')),'%')
+            </if>
+            <if test=" condition.ftcontractcode2 != null and condition.ftcontractcode2 != '' ">
+                and lower(eaptftcont0_.FTCONTRACTCODE2) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode2}')),'%')
+            </if>
+            <if test=" condition.developer != null and condition.developer != '' ">
+                and exists(select 1 from EMPLOYEE epl where epl.NAME = #{condition.developer} and eaptftcont0_.PRINCIPAL1 = epl.USERNAME)
+            </if>
+            <if test=" condition.principal2 != null and condition.principal2 != '' ">
+                and lower(eaptcustom2_.PRINCIPAL2) LIKE concat(CONCAT('%',lower('${condition.principal2}')),'%')
+            </if>
+            <if test=" condition.kfpartId != null and condition.kfpartId != '' ">
+                and exists(select 1 from EMPLOYEE epl2 where epl2.CATEGORY5 = #{condition.kfpartId} and eaptcustom2_.PRINCIPAL1NO = epl2.EMPLOYEENO)
+            </if>
+            <if test=" condition.mainregionId != null and condition.mainregionId != '' ">
+                and eaptftcont0_.MAINREGION = #{condition.mainregionId}
+            </if>
+            <if test=" condition.contractypeId == null or condition.contractypeId == '' ">
+                and eaptftcont0_.CONTRACTYPE2 IN ('EXP', 'IMP', 'SAL', 'TRS')
+            </if>
+            <if test=" condition.contractypeId != null and condition.contractypeId != '' ">
+                and eaptftcont0_.CONTRACTYPE2 = #{condition.contractypeId}
+            </if>
+            <if test=" condition.selfagentId != null and condition.selfagentId != '' ">
+                and eaptftcont0_.AGENTORSELF = #{condition.selfagentId}
+            </if>
+            <if test=" condition.iszzkf != null and condition.iszzkf != '' ">
+                and eaptcustom2_.ISZZKF = #{condition.iszzkf}
+            </if>
+            <if test=" condition.jscustomer != null and condition.jscustomer != '' ">
+                and eaptcustom2_.CUSTOMERCODE = #{condition.jscustomer}
+            </if>
+            <if test=" condition.totalforeign != null and condition.totalforeign != '' ">
+                <if test="condition.totalforeign=='G'.toString()">
+                and eaptftcont1_.TOTALFOREIGN > 0
+                </if>
+                <if test="condition.totalforeign=='E'.toString()">
+                and eaptftcont1_.TOTALFOREIGN = 0
+                </if>
+                <if test="condition.totalforeign=='L'.toString()">
+                <![CDATA[and eaptftcont1_.TOTALFOREIGN < 0]]>
+                </if>
+            </if>
+		   and eaptftcont0_.FTCSTATUS IN ('RUN', 'CLO')
+  </select>
+  
+  <select id="querySingleSum" resultMap="SumMap" parameterType="PageInfo">
+    	<![CDATA[ select head.FTCCURRENCY as ftccurrency,
+			       sum(head5.TOTALOPERATIONAMOUNT) as totaloperationamountall,
+			       sum(head5.TOTALBUSIAMOUNT) as totalbusiamountall,
+			       sum(head5.TOTALFOREIGN) as totalforeignall from EAPT_FTCONTRACTHEADER head inner join EAPT_FTCONTRACTHEADER5 head5
+			 on head.FTCONTRACTNO = head5.FTCONTRACTNO
+			 left join EAPT_CUSTOMER eaptcustom2_ on head.PAYMENTCUSTOMER =
+                                                        eaptcustom2_.CUSTOMERNO
+			 where 1=1]]>
+            <if test=" condition.createdateStart != null ">
+                and head.CUSTOMDATE >= to_date(#{condition.createdateStart},'yyyy-mm-dd')
+            </if>
+            <if test=" condition.createdateEnd != null ">
+                <![CDATA[and head.CUSTOMDATE <= to_date(#{condition.createdateEnd},'yyyy-mm-dd')]]>
+            </if>
+            <if test=" condition.operationId != null and condition.operationId != '' ">
+                and head.OPERATIONDEPT = #{condition.operationId}
+            </if>
+            <if test=" condition.tgId != null and condition.tgId != '' ">
+                and head.CUSTOMSTATUS = #{condition.tgId}
+            </if>
+            <if test=" condition.ftcontractcode != null and condition.ftcontractcode != '' ">
+                and lower(head.FTCONTRACTCODE) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode}')),'%')
+            </if>
+            <if test=" condition.ftcontractcode2 != null and condition.ftcontractcode2 != '' ">
+                and lower(head.FTCONTRACTCODE2) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode2}')),'%')
+            </if>
+            <if test=" condition.developer != null and condition.developer != '' ">
+                and exists(select 1 from EMPLOYEE epl where epl.NAME = #{condition.developer} and head.PRINCIPAL1 = epl.USERNAME)
+            </if>
+            <if test=" condition.principal2 != null and condition.principal2 != '' ">
+                and lower(eaptcustom2_.PRINCIPAL2) LIKE concat(CONCAT('%',lower('${condition.principal2}')),'%')
+            </if>
+            <if test=" condition.kfpartId != null and condition.kfpartId != '' ">
+                and exists(select 1 from EMPLOYEE epl2 where epl2.CATEGORY5 = #{condition.kfpartId} and eaptcustom2_.PRINCIPAL1NO = epl2.EMPLOYEENO)
+            </if>
+            <if test=" condition.mainregionId != null and condition.mainregionId != '' ">
+                and head.MAINREGION = #{condition.mainregionId}
+            </if>
+            <if test=" condition.contractypeId == null or condition.contractypeId == '' ">
+                and head.CONTRACTYPE2 IN ('EXP', 'IMP', 'SAL', 'TRS')
+            </if>
+            <if test=" condition.contractypeId != null and condition.contractypeId != '' ">
+                and head.CONTRACTYPE2 = #{condition.contractypeId}
+            </if>
+            <if test=" condition.selfagentId != null and condition.selfagentId != '' ">
+                and head.AGENTORSELF = #{condition.selfagentId}
+            </if>
+            <if test=" condition.iszzkf != null and condition.iszzkf != '' ">
+                and eaptcustom2_.ISZZKF = #{condition.iszzkf}
+            </if>
+            <if test=" condition.jscustomer != null and condition.jscustomer != '' ">
+                and eaptcustom2_.CUSTOMERCODE = #{condition.jscustomer}
+            </if>
+            <if test=" condition.totalforeign != null and condition.totalforeign != '' ">
+                <if test="condition.totalforeign=='G'.toString()">
+                and head5.TOTALFOREIGN > 0
+                </if>
+                <if test="condition.totalforeign=='E'.toString()">
+                and head5.TOTALFOREIGN = 0
+                </if>
+                <if test="condition.totalforeign=='L'.toString()">
+                <![CDATA[and head5.TOTALFOREIGN < 0]]>
+                </if>
+            </if>
+		   and head.FTCSTATUS IN ('RUN', 'CLO')
+		   group by head.FTCCURRENCY
+  </select>
+  
+  <select id="querySingleSumTotal" resultMap="SumTotalMap" parameterType="PageInfo">
+    	<![CDATA[ select sum(head5.TOTALRMBFTCAMOUNT) as totalrmbftcamountsum,
+			       sum(head5.TOTALRMBBUSIAMOUNT) as totalrmbbusiamountsum,
+			       sum(head5.PAYMENTOFAGENT) as paymentofagentsum,
+			       sum(head5.PAYMENTOFGET) as paymentofgetsum,
+			       sum(head5.TOTALUSDFTCAMOUNT) as totalusdftcamountsum
+			        from EAPT_FTCONTRACTHEADER head inner join EAPT_FTCONTRACTHEADER5 head5
+			 on head.FTCONTRACTNO = head5.FTCONTRACTNO
+			 left join EAPT_CUSTOMER eaptcustom2_ on head.PAYMENTCUSTOMER =
+                                                        eaptcustom2_.CUSTOMERNO
+			 where 1=1]]>
+            <if test=" condition.createdateStart != null ">
+                and head.CUSTOMDATE >= to_date(#{condition.createdateStart},'yyyy-mm-dd')
+            </if>
+            <if test=" condition.createdateEnd != null ">
+                <![CDATA[and head.CUSTOMDATE <= to_date(#{condition.createdateEnd},'yyyy-mm-dd')]]>
+            </if>
+            <if test=" condition.operationId != null and condition.operationId != '' ">
+                and head.OPERATIONDEPT = #{condition.operationId}
+            </if>
+            <if test=" condition.tgId != null and condition.tgId != '' ">
+                and head.CUSTOMSTATUS = #{condition.tgId}
+            </if>
+            <if test=" condition.ftcontractcode != null and condition.ftcontractcode != '' ">
+                and lower(head.FTCONTRACTCODE) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode}')),'%')
+            </if>
+            <if test=" condition.ftcontractcode2 != null and condition.ftcontractcode2 != '' ">
+                and lower(head.FTCONTRACTCODE2) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode2}')),'%')
+            </if>
+            <if test=" condition.developer != null and condition.developer != '' ">
+                and exists(select 1 from EMPLOYEE epl where epl.NAME = #{condition.developer} and head.PRINCIPAL1 = epl.USERNAME)
+            </if>
+            <if test=" condition.principal2 != null and condition.principal2 != '' ">
+                and lower(eaptcustom2_.PRINCIPAL2) LIKE concat(CONCAT('%',lower('${condition.principal2}')),'%')
+            </if>
+            <if test=" condition.kfpartId != null and condition.kfpartId != '' ">
+                and exists(select 1 from EMPLOYEE epl2 where epl2.CATEGORY5 = #{condition.kfpartId} and eaptcustom2_.PRINCIPAL1NO = epl2.EMPLOYEENO)
+            </if>
+            <if test=" condition.mainregionId != null and condition.mainregionId != '' ">
+                and head.MAINREGION = #{condition.mainregionId}
+            </if>
+            <if test=" condition.contractypeId == null or condition.contractypeId == '' ">
+                and head.CONTRACTYPE2 IN ('EXP', 'IMP', 'SAL', 'TRS')
+            </if>
+            <if test=" condition.contractypeId != null and condition.contractypeId != '' ">
+                and head.CONTRACTYPE2 = #{condition.contractypeId}
+            </if>
+            <if test=" condition.selfagentId != null and condition.selfagentId != '' ">
+                and head.AGENTORSELF = #{condition.selfagentId}
+            </if>
+            <if test=" condition.iszzkf != null and condition.iszzkf != '' ">
+                and eaptcustom2_.ISZZKF = #{condition.iszzkf}
+            </if>
+            <if test=" condition.jscustomer != null and condition.jscustomer != '' ">
+                and eaptcustom2_.CUSTOMERCODE = #{condition.jscustomer}
+            </if>
+            <if test=" condition.totalforeign != null and condition.totalforeign != '' ">
+                <if test="condition.totalforeign=='G'.toString()">
+                and head5.TOTALFOREIGN > 0
+                </if>
+                <if test="condition.totalforeign=='E'.toString()">
+                and head5.TOTALFOREIGN = 0
+                </if>
+                <if test="condition.totalforeign=='L'.toString()">
+                <![CDATA[and head5.TOTALFOREIGN < 0]]>
+                </if>
+            </if>
+		   and head.FTCSTATUS IN ('RUN', 'CLO') and head.CONTRACTYPE2 IN ('EXP', 'IMP', 'SAL', 'TRS')
+  </select>
+  
+  <select id="querySingleCustomerCost" resultMap="SingleCustomerCostMap" parameterType="PageInfo">
+    	<![CDATA[ select eaptftcont1_.PAYMENTOFAGENT as PAYMENTOFAGENT,
+			       eaptcustom2_.CUSTOMERCODE   as CUSTOMERNO
+			  from EAPT_FTCONTRACTHEADER  eaptftcont0_,
+			       EAPT_FTCONTRACTHEADER5 eaptftcont1_,
+			       EAPT_CUSTOMER          eaptcustom2_
+			 where eaptftcont0_.FTCONTRACTNO = eaptftcont1_.FTCONTRACTNO
+			   and eaptftcont0_.PAYMENTCUSTOMER = eaptcustom2_.CUSTOMERNO]]>
+            <if test=" condition.createdateStart != null ">
+                and eaptftcont0_.CUSTOMDATE >= to_date(#{condition.createdateStart},'yyyy-mm-dd')
+            </if>
+            <if test=" condition.createdateEnd != null ">
+                <![CDATA[and eaptftcont0_.CUSTOMDATE <= to_date(#{condition.createdateEnd},'yyyy-mm-dd')]]>
+            </if>
+            <if test=" condition.operationId != null and condition.operationId != '' ">
+                and eaptftcont0_.OPERATIONDEPT = #{condition.operationId}
+            </if>
+            <if test=" condition.tgId != null and condition.tgId != '' ">
+                and eaptftcont0_.CUSTOMSTATUS = #{condition.tgId}
+            </if>
+            <if test=" condition.ftcontractcode != null and condition.ftcontractcode != '' ">
+                and lower(eaptftcont0_.FTCONTRACTCODE) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode}')),'%')
+            </if>
+            <if test=" condition.ftcontractcode2 != null and condition.ftcontractcode2 != '' ">
+                and lower(eaptftcont0_.FTCONTRACTCODE2) LIKE concat(CONCAT('%',lower('${condition.ftcontractcode2}')),'%')
+            </if>
+            <if test=" condition.developer != null and condition.developer != '' ">
+                and exists(select 1 from EMPLOYEE epl where epl.NAME = #{condition.developer} and eaptftcont0_.PRINCIPAL1 = epl.USERNAME)
+            </if>
+            <if test=" condition.principal2 != null and condition.principal2 != '' ">
+                and lower(eaptcustom2_.PRINCIPAL2) LIKE concat(CONCAT('%',lower('${condition.principal2}')),'%')
+            </if>
+            <if test=" condition.kfpartId != null and condition.kfpartId != '' ">
+                and exists(select 1 from EMPLOYEE epl2 where epl2.CATEGORY5 = #{condition.kfpartId} and eaptcustom2_.PRINCIPAL1NO = epl2.EMPLOYEENO)
+            </if>
+            <if test=" condition.mainregionId != null and condition.mainregionId != '' ">
+                and eaptftcont0_.MAINREGION = #{condition.mainregionId}
+            </if>
+            <if test=" condition.contractypeId == null or condition.contractypeId == '' ">
+                and eaptftcont0_.CONTRACTYPE2 IN ('EXP', 'IMP', 'SAL', 'TRS')
+            </if>
+            <if test=" condition.contractypeId != null and condition.contractypeId != '' ">
+                and eaptftcont0_.CONTRACTYPE2 = #{condition.contractypeId}
+            </if>
+            <if test=" condition.selfagentId != null and condition.selfagentId != '' ">
+                and eaptftcont0_.AGENTORSELF = #{condition.selfagentId}
+            </if>
+            <if test=" condition.iszzkf != null and condition.iszzkf != '' ">
+                and eaptcustom2_.ISZZKF = #{condition.iszzkf}
+            </if>
+            <if test=" condition.jscustomer != null and condition.jscustomer != '' ">
+                and eaptcustom2_.CUSTOMERCODE = #{condition.jscustomer}
+            </if>
+            <if test=" condition.totalforeign != null and condition.totalforeign != '' ">
+                <if test="condition.totalforeign=='G'.toString()">
+                and eaptftcont1_.TOTALFOREIGN > 0
+                </if>
+                <if test="condition.totalforeign=='E'.toString()">
+                and eaptftcont1_.TOTALFOREIGN = 0
+                </if>
+                <if test="condition.totalforeign=='L'.toString()">
+                <![CDATA[and eaptftcont1_.TOTALFOREIGN < 0]]>
+                </if>
+            </if>
+		   and eaptftcont0_.FTCSTATUS IN ('RUN', 'CLO') and eaptftcont0_.CONTRACTYPE2 IN ('EXP', 'IMP', 'SAL', 'TRS')
+  </select>
+</mapper>

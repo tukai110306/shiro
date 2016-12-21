@@ -44,7 +44,7 @@ public class ResourceServiceImpl implements ResourceService {
             for (Resource resourceOne : resourceFather) {
                 Tree treeOne = new Tree();
 
-                treeOne.setId(resourceOne.getId());
+                treeOne.setId(resourceOne.getId().toString());
                 treeOne.setText(resourceOne.getName());
                 treeOne.setIconCls(resourceOne.getIcon());
                 treeOne.setAttributes(resourceOne.getUrl());
@@ -54,7 +54,7 @@ public class ResourceServiceImpl implements ResourceService {
                     List<Tree> tree = new ArrayList<Tree>();
                     for (Resource resourceTwo : resourceSon) {
                         Tree treeTwo = new Tree();
-                        treeTwo.setId(resourceTwo.getId());
+                        treeTwo.setId(resourceTwo.getId().toString());
                         treeTwo.setText(resourceTwo.getName());
                         treeTwo.setIconCls(resourceTwo.getIcon());
                         treeTwo.setAttributes(resourceTwo.getUrl());
@@ -81,7 +81,7 @@ public class ResourceServiceImpl implements ResourceService {
         for (Resource resource : resourceIdList) {
                 if (resource != null && resource.getPid() == null) {
                     Tree treeOne = new Tree();
-                    treeOne.setId(resource.getId());
+                    treeOne.setId(resource.getId().toString());
                     treeOne.setText(resource.getName());
                     treeOne.setIconCls(resource.getIcon());
                     treeOne.setAttributes(resource.getUrl());
@@ -89,7 +89,7 @@ public class ResourceServiceImpl implements ResourceService {
                     for (Resource resourceTwo : resourceIdList) {
                         if (resourceTwo.getPid() != null && resource.getId().longValue() == resourceTwo.getPid().longValue()) {
                             Tree treeTwo = new Tree();
-                            treeTwo.setId(resourceTwo.getId());
+                            treeTwo.setId(resourceTwo.getId().toString());
                             treeTwo.setText(resourceTwo.getName());
                             treeTwo.setIconCls(resourceTwo.getIcon());
                             treeTwo.setAttributes(resourceTwo.getUrl());
@@ -124,7 +124,7 @@ public class ResourceServiceImpl implements ResourceService {
         for (Resource resourceOne : resources) {
             Tree treeOne = new Tree();
 
-            treeOne.setId(resourceOne.getId());
+            treeOne.setId(resourceOne.getId().toString());
             treeOne.setText(resourceOne.getName());
             treeOne.setIconCls(resourceOne.getIcon());
             treeOne.setAttributes(resourceOne.getUrl());
@@ -135,7 +135,7 @@ public class ResourceServiceImpl implements ResourceService {
                 List<Tree> tree = new ArrayList<Tree>();
                 for (Resource resourceTwo : resourceSon) {
                     Tree treeTwo = new Tree();
-                    treeTwo.setId(resourceTwo.getId());
+                    treeTwo.setId(resourceTwo.getId().toString());
                     treeTwo.setText(resourceTwo.getName());
                     treeTwo.setIconCls(resourceTwo.getIcon());
                     treeTwo.setAttributes(resourceTwo.getUrl());
@@ -163,7 +163,7 @@ public class ResourceServiceImpl implements ResourceService {
         for (Resource resourceOne : resources) {
             Tree treeOne = new Tree();
 
-            treeOne.setId(resourceOne.getId());
+            treeOne.setId(resourceOne.getId().toString());
             treeOne.setText(resourceOne.getName());
             treeOne.setIconCls(resourceOne.getIcon());
             treeOne.setAttributes(resourceOne.getUrl());
@@ -178,7 +178,7 @@ public class ResourceServiceImpl implements ResourceService {
                 for (Resource resourceTwo : resourceSon) {
                     Tree treeTwo = new Tree();
 
-                    treeTwo.setId(resourceTwo.getId());
+                    treeTwo.setId(resourceTwo.getId().toString());
                     treeTwo.setText(resourceTwo.getName());
                     treeTwo.setIconCls(resourceTwo.getIcon());
                     treeTwo.setAttributes(resourceTwo.getUrl());
@@ -194,7 +194,7 @@ public class ResourceServiceImpl implements ResourceService {
                         for (Resource resourceThree : resourceSons) {
                             Tree treeThree = new Tree();
 
-                            treeThree.setId(resourceThree.getId());
+                            treeThree.setId(resourceThree.getId().toString());
                             treeThree.setText(resourceThree.getName());
                             treeThree.setIconCls(resourceThree.getIcon());
                             treeThree.setAttributes(resourceThree.getUrl());

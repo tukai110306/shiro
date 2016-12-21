@@ -219,6 +219,30 @@
                 
                 <div title="财务相关" style="overflow: auto;">
                 </div>
+                
+                <div title="oa相关" style="overflow: auto;">
+                    <div class="nav-item">
+                        <a href="javascript:addTab('流程查询','${path}/oaflow/hrmresource','menu_icon_datadeal')">
+                            <span class="menu_icon_datadeal"></span>
+                            <span>流程查询</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="javascript:addTab('交办任务','${path}/oaflow/assigntask','menu_icon_datadeal')">
+                            <span class="menu_icon_datadeal"></span>
+                            <span>交办任务</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div title="erp相关" style="overflow: auto;">
+                    <div class="nav-item">
+                        <a href="javascript:addTab('单笔运作统计','${path}/erpstatistics/single','menu_icon_datadeal')">
+                            <span class="menu_icon_datadeal"></span>
+                            <span>单笔运作统计</span>
+                        </a>
+                    </div>
+                </div>
 
                 <div title="日志管理" style="overflow: auto;">
                     <div class="nav-item">

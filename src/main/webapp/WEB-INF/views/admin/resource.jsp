@@ -155,6 +155,9 @@
         });
     }
     </script>
+    <style>
+		.datagrid-cell{line-height:30px}
+	</style>
 </head>
 <body>
     <div class="easyui-layout" data-options="fit:true,border:false">

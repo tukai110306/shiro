@@ -6,7 +6,7 @@
     <packaging>war</packaging>
     <version>1.0</version>
     <name>spring-shiro-training Maven Webapp</name>
-    <url>http://maven.apache.org</url>
+    <url>http://maven.apache.org</url> 
 
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
@@ -233,6 +233,25 @@
             <artifactId>shiro-ehcache</artifactId>
             <version>${shiro.version}</version>
         </dependency>
+        <dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6</version>
+		</dependency>
+		<!-- <dependency><groupId>org.apache.poi</groupId>  
+			 <artifactId>poi-ooxml</artifactId>  
+			 <version>3.5-FINAL</version>  
+		</dependency> --> 
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>3.9</version>
+		</dependency> 
     </dependencies>
 
     <build>

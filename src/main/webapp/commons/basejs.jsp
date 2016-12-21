@@ -14,6 +14,7 @@
 <script type="text/javascript" src="${staticPath }/static/easyui/locale/easyui-lang-zh_CN.js" charset="utf-8"></script>
 <!-- [扩展JS] -->
 <script type="text/javascript" src="${staticPath }/static/extJs.js" charset="utf-8"></script>
+<script type="text/javascript" src="${staticPath }/static/expendmessage.js" charset="utf-8"></script>
 <%-- <script type="text/javascript" src="${staticPath }/static/echart/echarts.js" charset="utf-8"></script> --%>
 <script type="text/javascript" src="${staticPath }/static/echart2/echarts.js" charset="utf-8"></script>
 <!-- [扩展样式] -->

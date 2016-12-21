@@ -14,7 +14,9 @@
     http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- 扫描service -->
-    <context:component-scan base-package="com.yjxbi.service"/>
+    <context:component-scan base-package="com.yjxbi.service">
+    	<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+    </context:component-scan>
     <!-- 多数据源aop datasource -->
     <context:component-scan base-package="com.yjxbi.commons.datasource"/>
 
@@ -95,13 +97,13 @@
 		<property name="filters" value="${filters}" />		
 	</bean>
 	
-	<bean id="slave-dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+	<bean id="slave-erp" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
 		<!-- 数据库基本信息配置 -->
-		<property name="driverClassName" value="${slave_driver}" />
-		<property name="url" value="${slave_driverUrl}" />
-		<property name="username" value="${slave_username}" />
-		<property name="password" value="${slave_password}" />		
+		<property name="driverClassName" value="${erp_slave_driver}" />
+		<property name="url" value="${erp_slave_driverUrl}" />
+		<property name="username" value="${erp_slave_username}" />
+		<property name="password" value="${erp_slave_password}" />		
 		<!-- 初始化连接数量 -->
 		<property name="initialSize" value="${initialSize}" />
 		<!-- 最大并发连接数 -->
@@ -138,13 +140,13 @@
 		<property name="filters" value="${filters}" />		
 	</bean>
 	
-	<bean id="slave-dataSource2" class="com.alibaba.druid.pool.DruidDataSource"
+	<bean id="slave-oa" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
 		<!-- 数据库基本信息配置 -->
-		<property name="driverClassName" value="${slave_driver2}" />
-		<property name="url" value="${slave_driverUrl2}" />
-		<property name="username" value="${slave_username2}" />
-		<property name="password" value="${slave_password2}" />		
+		<property name="driverClassName" value="${oa_slave_driver}" />
+		<property name="url" value="${oa_slave_driverUrl}" />
+		<property name="username" value="${oa_slave_username}" />
+		<property name="password" value="${oa_slave_password}" />		
 		<!-- 初始化连接数量 -->
 		<property name="initialSize" value="${initialSize}" />
 		<!-- 最大并发连接数 -->
@@ -186,8 +188,8 @@
         <property name="master" ref="master-dataSource"/>
         <property name="slaves">
             <list>
-                <ref bean="slave-dataSource"/>
-                <ref bean="slave-dataSource2"/>
+                <ref bean="slave-erp"/>
+                <ref bean="slave-oa"/>
             </list>
         </property>
     </bean>
@@ -229,4 +231,5 @@
     <aop:config>
         <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* com.yjxbi.service..*.*(..))"/>
     </aop:config>
+    
 </beans>

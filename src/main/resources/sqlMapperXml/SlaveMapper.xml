@@ -1,8 +1,159 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yjxbi.mapper.SlaveMapper">
+	<resultMap id="HrmreSourceMap" type="com.yjxbi.model.HrmreSource">
+        <result column="xttype" property="xttype" jdbcType="VARCHAR"/>
+        <result column="sqname" property="sqname" jdbcType="VARCHAR"/>
+        <result column="createdate" property="createdate" jdbcType="VARCHAR"/>
+        <result column="createreason" property="createreason" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="yjbegintm" property="yjbegintm" jdbcType="VARCHAR"/>
+        <result column="yjendtm" property="yjendtm" jdbcType="VARCHAR"/>
+        <result column="realize" property="realize" jdbcType="VARCHAR"/>
+        <result column="byuser" property="byuser" jdbcType="VARCHAR"/>
+        <result column="sjbegintm" property="sjbegintm" jdbcType="VARCHAR"/>
+        <result column="sjendtm" property="sjendtm" jdbcType="VARCHAR"/>
+        <result column="checkstate" property="checkstate" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="AssignTaskMap" type="com.yjxbi.model.AssignTask">
+        <result column="lastname" property="lastname" jdbcType="VARCHAR"/>
+        <result column="liucbh" property="liucbh" jdbcType="VARCHAR"/>
+        <result column="shenqrq" property="shenqrq" jdbcType="VARCHAR"/>
+        <result column="laiy" property="laiy" jdbcType="VARCHAR"/>
+        <result column="shixjs" property="shixjs" jdbcType="VARCHAR"/>
+        <result column="shixmx" property="shixmx" jdbcType="VARCHAR"/>
+        <result column="shixjzqk" property="shixjzqk" jdbcType="VARCHAR"/>
+        <result column="yanzqk" property="yanzqk" jdbcType="VARCHAR"/>
+        <result column="czdwt" property="czdwt" jdbcType="VARCHAR"/>
+        <result column="shijwcsj" property="shijwcsj" jdbcType="VARCHAR"/>
+        <result column="yaoqwcsj" property="yaoqwcsj" jdbcType="VARCHAR"/>
+        <result column="shenqingbiangeng" property="shenqingbiangeng" jdbcType="VARCHAR"/>
+        <result column="yanqigouxuan" property="yanqigouxuan" jdbcType="VARCHAR"/>
+        <result column="biangengshuom" property="biangengshuom" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="UserMap" type="com.yjxbi.model.Role">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="lastname" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="DepamentMap" type="com.yjxbi.model.Role">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="departmentname" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
 
-    <select id="count" resultType="java.lang.Integer">
-        select count(1) from tktemp2
+    <select id="queryHrmreSource" resultMap="HrmreSourceMap" parameterType="PageInfo">
+       <![CDATA[ select * from (select decode(fm3.xitonglx,0,'ERP系统',1,'OA系统',2,'CRM系统',3,'其他') xttype,
+		       hrs.lastname sqname,
+		       fm3.sqrq createdate,
+		       fm3.sqyy createreason,
+		       fm3.xwsm remark,
+		       fm3.yjksrq yjbegintm,
+		       fm3.yjjsrq yjendtm,
+		       fm3.sxgn realize,
+		       (select hrs1.lastname
+		          from HRMRESOURCE hrs1
+		         where hrs1.id = fm3.javagcs
+		         and length(fm3.javagcs)<4) byuser,
+		       fm3.sjksrq sjbegintm,
+		       fm3.sjwcrq sjendtm,
+		       decode(fm3.ywcsjg, 0, '通过',1,'不通过', null, null) checkstate,
+		       rownum rn
+		  from HRMRESOURCE hrs, FORMTABLE_MAIN_3 fm3
+		 where hrs.id = fm3.sqr]]>
+            <if test=" condition.userId != null and condition.userId != '' ">
+                and fm3.javagcs = #{condition.userId}
+            </if>
+            <if test=" condition.createdateStart != null ">
+                and fm3.sqrq >= #{condition.createdateStart}
+            </if>
+            <if test="condition.createdateEnd != null">
+                <![CDATA[
+		            and fm3.sqrq <= #{condition.createdateEnd}
+		           ]]>
+            </if>
+		   and fm3.sqrq>='2015-10-01'
+		 <![CDATA[order by createdate desc) temp where temp.rn > #{from} and temp.rn <= #{last}  ]]>
+    </select>
+    
+    <select id="queryHrmreSourceCount" resultType="java.lang.Integer" parameterType="PageInfo">
+    	<![CDATA[select count(1) count  from HRMRESOURCE hrs, FORMTABLE_MAIN_3 fm3
+				 where hrs.id = fm3.sqr]]>
+		            <if test=" condition.userId != null and condition.userId != '' ">
+		                and fm3.javagcs = #{condition.userId}
+		            </if>
+		            <if test=" condition.createdateStart != null ">
+		                and fm3.sqrq >= #{condition.createdateStart}
+		            </if>
+		            <if test="condition.createdateEnd != null">
+		                <![CDATA[
+				            and fm3.sqrq <= #{condition.createdateEnd}
+				           ]]>
+		            </if>
+				   and fm3.sqrq>='2015-10-01'
+				 order by createdate desc
+  </select>
+  
+  <select id="queryAssignTask" resultMap="AssignTaskMap" parameterType="PageInfo">
+       <![CDATA[ select * from ( select hrs.lastname,
+			        fm16.liucbh,
+			        fm16.shenqrq,
+			        fm16.shenqingbiangeng,
+        			fm16.yanqigouxuan,
+        			fm16.biangengshuom,
+			        fm16.laiy,
+			        fm16.shixjs,
+			        fm16.shixmx,
+			        fm16.shixjzqk,
+			        fm16.yanzqk,
+			        fm16.czdwt,
+			        fm16.shijwcsj,
+			        fm16.yaoqwcsj,
+			        rownum rn
+			 from HRMRESOURCE hrs,FORMTABLE_MAIN_16  fm16
+			 where hrs.id = fm16.shenqr]]>
+            <if test=" condition.userId != null and condition.userId != '' ">
+                and fm16.shenqr = #{condition.userId}
+            </if>
+            <if test=" condition.createdateStart != null ">
+                and fm16.shenqrq >= #{condition.createdateStart}
+            </if>
+            <if test="condition.createdateEnd != null">
+                <![CDATA[
+		            and fm16.shenqrq <= #{condition.createdateEnd}
+		           ]]>
+            </if>
+		 <![CDATA[order by shenqrq desc) temp where temp.rn > #{from} and temp.rn <= #{last}  ]]>
+    </select>
+    
+    <select id="queryAssignTaskCount" resultType="java.lang.Integer" parameterType="PageInfo">
+    	<![CDATA[select count(1) count from HRMRESOURCE hrs,FORMTABLE_MAIN_16  fm16
+			 where hrs.id = fm16.shenqr]]>
+		            <if test=" condition.userId != null and condition.userId != '' ">
+		                and fm16.shenqr = #{condition.userId}
+		            </if>
+		            <if test=" condition.createdateStart != null ">
+		                and fm16.shenqrq >= #{condition.createdateStart}
+		            </if>
+		            <if test="condition.createdateEnd != null">
+		                <![CDATA[
+				            and fm16.shenqrq <= #{condition.createdateEnd}
+				           ]]>
+		            </if>
+				 order by shenqrq desc
+  </select>
+  
+  <select id="queryNeedUser" resultMap="UserMap">
+       select hrs.id,hrs.lastname
+          from HRMRESOURCE hrs where hrs.departmentid=74
+   </select>
+    
+   <select id="findAllDepartment" resultMap="DepamentMap">
+       select dep.id,dep.departmentname from hrmdepartment dep
+   </select>
+   
+   <select id="findAllUserByDeparmentid" resultMap="UserMap" parameterType="java.lang.Long">
+        select hr.id,hr.lastname from HRMRESOURCE hr where hr.departmentid = #{pid}
     </select>
 </mapper>

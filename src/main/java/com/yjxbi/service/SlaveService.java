@@ -1,12 +1,22 @@
 package com.yjxbi.service;
 
-/**
- * @description：主重库测试
- * @author：zhixuan.wang
- * @date：2015/10/1 14:51
- */
+import java.util.List;
+
+import com.yjxbi.commons.result.Tree;
+import com.yjxbi.commons.utils.PageInfo;
+
 public interface SlaveService {
 
-    Integer count();
+    List queryHrmreSource(PageInfo pageInfo);
+    
+    void queryHrmreSourceGrid(PageInfo pageInfo);
+    
+    List<Tree> queryTree();
+    
+    void queryAssignTaskGrid(PageInfo pageInfo);
+    
+    List<Tree> queryAllDepartmentTree();
+    
+    List<Tree> queryAllUserTree(String departmentId);
 
 }

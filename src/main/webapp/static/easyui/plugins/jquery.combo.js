@@ -349,7 +349,7 @@ $.fn.combo.parseOptions=function(_51){
 var t=$(_51);
 return $.extend({},$.fn.textbox.parseOptions(_51),$.parser.parseOptions(_51,["separator","panelAlign",{panelWidth:"number",hasDownArrow:"boolean",delay:"number",selectOnNavigation:"boolean"},{panelMinWidth:"number",panelMaxWidth:"number",panelMinHeight:"number",panelMaxHeight:"number"}]),{panelHeight:(t.attr("panelHeight")=="auto"?"auto":parseInt(t.attr("panelHeight"))||undefined),multiple:(t.attr("multiple")?true:undefined)});
 };
-$.fn.combo.defaults=$.extend({},$.fn.textbox.defaults,{inputEvents:{click:_14,keydown:_19,paste:_19,drop:_19},panelWidth:null,panelHeight:200,panelMinWidth:null,panelMaxWidth:null,panelMinHeight:null,panelMaxHeight:null,panelAlign:"left",multiple:false,selectOnNavigation:true,separator:",",hasDownArrow:true,delay:200,keyHandler:{up:function(e){
+$.fn.combo.defaults=$.extend({},$.fn.textbox.defaults,{inputEvents:{click:_14,keyup:_19,paste:_19,drop:_19},panelWidth:null,panelHeight:200,panelMinWidth:null,panelMaxWidth:null,panelMinHeight:null,panelMaxHeight:null,panelAlign:"left",multiple:false,selectOnNavigation:true,separator:",",hasDownArrow:true,delay:200,keyHandler:{up:function(e){
 },down:function(e){
 },left:function(e){
 },right:function(e){

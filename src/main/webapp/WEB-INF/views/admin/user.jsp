@@ -225,6 +225,9 @@
         dataGrid.datagrid('load', {});
     }
     </script>
+     <style>
+		.datagrid-cell{line-height:30px}
+	</style>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
     <div data-options="region:'north',border:false" style="height: 30px; overflow: hidden;background-color: #fff">

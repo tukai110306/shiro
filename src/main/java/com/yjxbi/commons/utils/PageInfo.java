@@ -1,9 +1,11 @@
 package com.yjxbi.commons.utils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.yjxbi.model.SingleTotal;
+import com.yjxbi.model.SingleTotalSum;
 
 /**
  * @description：分页实体类 (结合jqery easyui)
@@ -15,8 +17,23 @@ public class PageInfo {
     private final static int PAGESIZE = 10; //默认显示的记录数 
 
     private int total; // 总记录 
-    private List rows; //显示的记录  
+    private List rows; //显示的记录 
+    
+    private Map<String,String> showResult;
+    
+    private List<SingleTotal> totalList;
+    
+    private SingleTotalSum singletotalsum;
+    
+    public List<SingleTotal> getTotalList() {
+		return totalList;
+	}
 
+	public void setTotalList(List<SingleTotal> totalList) {
+		this.totalList = totalList;
+	}
+
+	private int last;
     @JsonIgnore
     private int from;
     @JsonIgnore
@@ -54,6 +71,7 @@ public class PageInfo {
         //计算开始的记录和结束的记录  
         this.from = (this.nowpage - 1) * this.pagesize;
         this.size = this.pagesize;
+        this.last = this.from + this.size;
     }
 
     // 构造方法
@@ -74,6 +92,7 @@ public class PageInfo {
         // 计算开始的记录和结束的记录  
         this.from = (this.nowpage - 1) * this.pagesize;
         this.size = this.pagesize;
+        this.last = this.from+this.size;
         // 排序字段，正序还是反序
         this.sort = sort;
         this.order = order;
@@ -150,4 +169,28 @@ public class PageInfo {
     public void setOrder(String order) {
         this.order = order;
     }
+
+	public int getLast() {
+		return last;
+	}
+
+	public void setLast(int last) {
+		this.last = last;
+	}
+
+	public Map<String, String> getShowResult() {
+		return showResult;
+	}
+
+	public void setShowResult(Map<String, String> showResult) {
+		this.showResult = showResult;
+	}
+
+	public SingleTotalSum getSingletotalsum() {
+		return singletotalsum;
+	}
+
+	public void setSingletotalsum(SingleTotalSum singletotalsum) {
+		this.singletotalsum = singletotalsum;
+	}
 }

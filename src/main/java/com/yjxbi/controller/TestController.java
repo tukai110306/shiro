@@ -1,6 +1,7 @@
 package com.yjxbi.controller;
 
 import com.yjxbi.commons.base.BaseController;
+import com.yjxbi.commons.utils.PageInfo;
 import com.yjxbi.service.SlaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,8 @@ public class TestController extends BaseController {
      */
     @RequestMapping(value = "/slave", method = RequestMethod.GET)
     public String slave(Model model) {
-        Integer count = slaveService.count();
+    	PageInfo pageInfo = new PageInfo(1, 20);
+    	Integer count = 0;//slaveService.queryHrmreSource(pageInfo).size();
         model.addAttribute("count", count);
         return "admin/test";
     }

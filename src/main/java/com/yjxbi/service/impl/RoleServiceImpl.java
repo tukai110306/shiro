@@ -42,7 +42,7 @@ public class RoleServiceImpl implements RoleService {
         List<Role> roles = roleMapper.findRoleAll();
         for (Role role : roles) {
             Tree tree = new Tree();
-            tree.setId(role.getId());
+            tree.setId(role.getId().toString());
             tree.setText(role.getName());
 
             trees.add(tree);
